@@ -19,6 +19,8 @@ import com.facebook.login.widget.ProfilePictureView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Arrays;
+
 public class MainActivity extends AppCompatActivity {
 
     private LoginButton loginButton;
@@ -26,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
     private CallbackManager callbackManager;
     private TextView username;
     private TextView email;
+    private TextView birth;
+    private TextView gender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +39,15 @@ public class MainActivity extends AppCompatActivity {
 
         callbackManager = CallbackManager.Factory.create();
         loginButton = (LoginButton) findViewById(R.id.login_button);
+
+        // required by fb
+        loginButton.setReadPermissions(Arrays.asList("public_profile, email, user_birthday"));
+
         profileImage = (ProfilePictureView) findViewById(R.id.profileImage);
         username = (TextView) findViewById(R.id.txtUsername);
         email = (TextView) findViewById(R.id.txtEmail);
+        birth = (TextView) findViewById(R.id.txtBirth);
+        gender = (TextView) findViewById(R.id.txtGender);
 
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -82,7 +92,9 @@ public class MainActivity extends AppCompatActivity {
     private void configureProfile(JSONObject jsonObject){
         try {
             username.setText(jsonObject.getString("name"));
-//            email.setText(jsonObject.getString("email"));
+            gender.setText(jsonObject.getString("gender"));
+            birth.setText(jsonObject.getString("birthday"));
+            email.setText(jsonObject.getString("email"));
 
             profileImage.setPresetSize(ProfilePictureView.NORMAL);
             profileImage.setProfileId(jsonObject.getString("id"));
